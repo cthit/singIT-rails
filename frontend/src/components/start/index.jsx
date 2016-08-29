@@ -1,6 +1,7 @@
 //@flow
 
 import React, {PropTypes} from 'react';
+import fuzzy from 'fuzzy';
 import {fetchJson} from '../../services/backend';
 
 import styles from './style.css'
@@ -34,17 +35,19 @@ const Start = React.createClass({
 
     render() {
         const { songs, searchString } = this.state;
-        const searchboxStyles = [styles.searchBox];
+
+        const searchOptions = { extract: e => `${e.artist} ${e.title}` };
+        const searchResult = fuzzy.filter(searchString, songs, searchOptions);
 
         return (
             <div>
               <h1>singIT</h1>
               <input type="text"
-                     className={searchboxStyles.join(' ')}
+                     className={styles.searchBox}
                      onChange={this.handleSearchInput}
                      value={searchString}
                      placeholder="Search" />
-              {songs.map(this.renderSong)}
+              {searchResult.map(s => this.renderSong(s.original))}
             </div>
         )
     }

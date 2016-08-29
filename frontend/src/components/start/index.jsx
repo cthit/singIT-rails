@@ -37,7 +37,7 @@ const Start = React.createClass({
         const { songs, searchString } = this.state;
 
         const searchOptions = { extract: e => `${e.artist} ${e.title}` };
-        const searchResult = fuzzy.filter(searchString, songs, searchOptions);
+        const searchResults = fuzzy.filter(searchString, songs, searchOptions);
 
         return (
             <div>
@@ -47,7 +47,8 @@ const Start = React.createClass({
                      onChange={this.handleSearchInput}
                      value={searchString}
                      placeholder="Search" />
-              {searchResult.map(s => this.renderSong(s.original))}
+              <div>Hits: {searchString ? searchResults.length : songs.length}</div>
+              {searchResults.map(s => this.renderSong(s.original))}
             </div>
         )
     }

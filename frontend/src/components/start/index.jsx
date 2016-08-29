@@ -21,8 +21,13 @@ const Start = React.createClass({
     renderSong(song) {
       return (
         <div key={song.id} className={styles.song}>
-          <div className={styles.title}>{song.title}</div>
-          <div className={styles.artist}>{song.artist}</div>
+          {song.imageUrl != null
+            ? <img src={song.imageUrl} className={styles.cover} />
+            : <img src="/default_cover.png" className={styles.cover} />}
+          <div className={styles.info}>
+            <div className={styles.title}>{song.title}</div>
+            <div className={styles.artist}>{song.artist}</div>
+          </div>
         </div>
       )
     },
@@ -47,7 +52,7 @@ const Start = React.createClass({
                      onChange={this.handleSearchInput}
                      value={searchString}
                      placeholder="Search" />
-              <div>Hits: {searchString ? searchResults.length : songs.length}</div>
+              <div className={styles.hits}>Hits: {searchString ? searchResults.length : songs.length}</div>
               {searchResults.map(s => this.renderSong(s.original))}
             </div>
         )

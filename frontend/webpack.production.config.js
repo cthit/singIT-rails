@@ -16,6 +16,9 @@ module.exports = {
 	module: {
 		loaders: loaders
 	},
+	postcss() {
+		return [require('precss'), require('autoprefixer')]
+	},
 	plugins: [
 		new webpack.optimize.OccurenceOrderPlugin(),
 		new webpack.DefinePlugin({

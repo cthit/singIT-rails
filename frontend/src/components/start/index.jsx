@@ -2,6 +2,7 @@
 
 import React, {PropTypes} from 'react';
 import fuzzy from 'fuzzy';
+import _ from 'lodash';
 import {fetchJson} from '../../services/backend';
 
 import styles from './style.css'
@@ -10,12 +11,17 @@ const Start = React.createClass({
     getInitialState() {
       return {
         searchString: '',
-        songs: []
+        songs: [],
+        filteredSongs: []
       };
     },
 
     componentDidMount() {
-        fetchJson('/api/songs.json').then(songs => this.setState({songs}));
+        this.debouncedPerformSearch = _.debounce(this.performSearch, 300);
+        fetchJson('/api/songs.json').then(songs => this.setState({
+          songs,
+          filteredSongs: songs
+        }));
     },
 
     renderSong(song) {
@@ -35,14 +41,21 @@ const Start = React.createClass({
     handleSearchInput(event) {
       this.setState({
         searchString: event.target.value
+      }, this.debouncedPerformSearch)
+    },
+
+    performSearch() {
+      const { searchString, songs } = this.state;
+      const searchOptions = { extract: e => `${e.artist} ${e.title}` };
+      const searchResults = fuzzy.filter(searchString, songs, searchOptions);
+
+      this.setState({
+        filteredSongs: searchResults.map(r => r.original)
       })
     },
 
     render() {
-        const { songs, searchString } = this.state;
-
-        const searchOptions = { extract: e => `${e.artist} ${e.title}` };
-        const searchResults = fuzzy.filter(searchString, songs, searchOptions);
+        const { filteredSongs, searchString } = this.state;
 
         return (
             <div>
@@ -52,8 +65,8 @@ const Start = React.createClass({
                      onChange={this.handleSearchInput}
                      value={searchString}
                      placeholder="Search" />
-              <div className={styles.hits}>Hits: {searchString ? searchResults.length : songs.length}</div>
-              {searchResults.map(s => this.renderSong(s.original))}
+              <div className={styles.hits}>Hits: {filteredSongs.length}</div>
+              {filteredSongs.map(s => this.renderSong(s))}
             </div>
         )
     }

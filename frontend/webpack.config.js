@@ -30,7 +30,13 @@ module.exports = {
 				colors: true,
 				chunks: false
 		},
-		proxy: {},
+
+		proxy: {
+			'/api': {
+				target: 'http://10.0.0.171:3000',
+				pathRewrite: {'^/api' : ''}
+			}
+		},
 	},
 	plugins: [
 		new webpack.optimize.OccurenceOrderPlugin(),

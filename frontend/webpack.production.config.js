@@ -15,5 +15,12 @@ module.exports = {
 	},
 	module: {
 		loaders: loaders
-	}
+	},
+	plugins: [
+		new webpack.optimize.OccurenceOrderPlugin(),
+		new webpack.DefinePlugin({
+       __DEV__: true,
+       'process.env.NODE_ENV': '"production"'
+    })
+	]
 };

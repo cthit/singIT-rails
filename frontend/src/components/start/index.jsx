@@ -62,8 +62,8 @@ const Start = React.createClass({
         const { filteredSongs, searchString } = this.state;
 
         return (
-            <div>
-              <h1>singIT</h1>
+            <div className={styles.container}>
+              <h1>singIT<span className={styles.version}>beta</span></h1>
               <input type="text"
                      className={styles.searchBox}
                      onChange={this.handleSearchInput}

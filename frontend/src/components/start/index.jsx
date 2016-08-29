@@ -46,6 +46,10 @@ const Start = React.createClass({
 
     performSearch() {
       const { searchString, songs } = this.state;
+      if (searchString.length <= 1) {
+        this.setState({ filteredSongs: songs })
+        return;
+      }
       const searchOptions = { extract: e => `${e.artist} ${e.title}` };
       const searchResults = fuzzy.filter(searchString, songs, searchOptions);
 

@@ -16,7 +16,9 @@
   "author": "juiceit",
   "license": "MIT",
   "dependencies": {
+    "exports-loader": "~0.6.3",
     "fuzzy": "^0.1.1",
+    "imports-loader": "~0.6.5",
     "lodash": "^4.15.0",
     "postcss-loader": "^0.11.0",
     "precss": "^1.4.0",

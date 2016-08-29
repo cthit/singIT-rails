@@ -1,5 +1,6 @@
 class SongsController < ApplicationController
   before_action :set_song, only: [:show, :edit, :update, :destroy]
+  before_action :restrict_access, only: [:batch_create, :create]
 
   # GET /songs
   # GET /songs.json
@@ -103,4 +104,11 @@ class SongsController < ApplicationController
     def permitted_keys 
       [:title, :artist, :imageUrl, :mp3hash, :artistTitleHash]
     end
+
+    def restrict_access
+      authenticate_or_request_with_http_token do |token, options|
+        ApiKey.exists?(access_token: token)
+      end
+    end
+
 end

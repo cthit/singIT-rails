@@ -5,7 +5,7 @@ class CreateSongs < ActiveRecord::Migration[5.0]
       t.string :artist
       t.string :imageUrl
       t.string :mp3hash
-      t.string :hash
+      t.string :artistTitleHash
 
       t.timestamps
     end

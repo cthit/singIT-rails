@@ -10,7 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160829142450) do
+ActiveRecord::Schema.define(version: 20160829190302) do
+
+  create_table "api_keys", force: :cascade do |t|
+    t.string   "access_token"
+    t.string   "comment"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
 
   create_table "songs", force: :cascade do |t|
     t.string   "title"

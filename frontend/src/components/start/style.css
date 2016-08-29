@@ -1,0 +1,22 @@
+.song {
+  border-bottom: solid 1px white;
+  padding: 0.5em 1em;
+}
+
+.title {
+
+}
+
+.artist {
+  font-size: smaller;
+  color: #9ee;
+}
+
+.searchBox {
+  background-color: white;
+  border-radius: 0.3em;
+  padding: 0.5em 0.8em;
+  margin-bottom: 1em;
+  flex: 1;
+  color: #333;
+}

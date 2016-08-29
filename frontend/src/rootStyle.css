@@ -12,6 +12,7 @@ body {
     font-family: 'Open Sans', serif;
     color: white;
     min-height: 100%;
+    background: #096d7a;
 }
 
 html { box-sizing: border-box;}
@@ -23,7 +24,6 @@ html { box-sizing: border-box;}
 }
 
 .rootContainer {
-    color: black;
     padding-bottom: 4em;
     display: flex;
     flex-direction: column;

@@ -8,6 +8,7 @@ import styles from './style.css'
 const Start = React.createClass({
     getInitialState() {
       return {
+        searchString: '',
         songs: []
       };
     },
@@ -25,12 +26,24 @@ const Start = React.createClass({
       )
     },
 
+    handleSearchInput(event) {
+      this.setState({
+        searchString: event.target.value
+      })
+    },
+
     render() {
-        const songs = this.state.songs;
+        const { songs, searchString } = this.state;
+        const searchboxStyles = [styles.searchBox];
+
         return (
             <div>
               <h1>singIT</h1>
-              <div className={styles.searchBox}>Search</div>
+              <input type="text"
+                     className={searchboxStyles.join(' ')}
+                     onChange={this.handleSearchInput}
+                     value={searchString}
+                     placeholder="Search" />
               {songs.map(this.renderSong)}
             </div>
         )

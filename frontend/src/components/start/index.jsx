@@ -1,6 +1,7 @@
 //@flow
 
 import React, {PropTypes} from 'react';
+import ReactDOM from 'react-dom';
 import fuzzy from 'fuzzy';
 import _ from 'lodash';
 import {fetchJson} from '../../services/backend';
@@ -17,7 +18,8 @@ const Start = React.createClass({
     },
 
     componentDidMount() {
-        this.debouncedPerformSearch = _.debounce(this.performSearch, 300);
+      ReactDOM.findDOMNode(this.refs.searchInput).focus();
+      this.debouncedPerformSearch = _.debounce(this.performSearch, 300);
         fetchJson('/api/songs.json').then(songs => {
           var sortedSongs = songs.sort(function(a, b) {
             return (a.artist > b.artist ? 1 : (a.artist < b.artist ? -1 :
@@ -72,6 +74,7 @@ const Start = React.createClass({
               <h1>singIT<span className={styles.version}>beta</span></h1>
               <input type="text"
                      className={styles.searchBox}
+                     ref="searchInput"
                      onChange={this.handleSearchInput}
                      value={searchString}
                      placeholder="Search" />

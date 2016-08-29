@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @song.title %>
+</p>
+
+<p>
+  <strong>Artist:</strong>
+  <%= @song.artist %>
+</p>
+
+<p>
+  <strong>Imageurl:</strong>
+  <%= @song.imageUrl %>
+</p>
+
+<p>
+  <strong>Mp3hash:</strong>
+  <%= @song.mp3hash %>
+</p>
+
+<p>
+  <strong>Artisttitlehash:</strong>
+  <%= @song.artistTitleHash %>
+</p>
+
+<%= link_to 'Edit', edit_song_path(@song) %> |
+<%= link_to 'Back', songs_path %>

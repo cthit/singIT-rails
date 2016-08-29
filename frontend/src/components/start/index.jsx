@@ -18,10 +18,16 @@ const Start = React.createClass({
 
     componentDidMount() {
         this.debouncedPerformSearch = _.debounce(this.performSearch, 300);
-        fetchJson('/api/songs.json').then(songs => this.setState({
-          songs,
-          filteredSongs: songs
-        }));
+        fetchJson('/api/songs.json').then(songs => {
+          var sortedSongs = songs.sort(function(a, b) {
+            return (a.artist > b.artist ? 1 : (a.artist < b.artist ? -1 :
+                    (a.title > b.title ? 1 : (a.title < b.title ? -1 : 0))));
+          });
+          this.setState({
+            songs: sortedSongs,
+            filteredSongs: sortedSongs
+          })
+        });
     },
 
     renderSong(song) {

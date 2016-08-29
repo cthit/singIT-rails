@@ -37,6 +37,34 @@ class SongsController < ApplicationController
     end
   end
 
+  def batch_create
+    @songs_params = params[:songs].map do |song|
+      song.permit(permitted_keys)
+    end
+
+    @songs = @songs_params.map {|s| Song.new s}
+
+    @creations = @songs.map do |s|  
+      if s.save
+        {success: true, msg: nil}
+      else 
+        {success: false, msg: s.errors}
+      end 
+    end
+
+    all_success = @creations.all? {|c| c[:success]}
+
+    respond_to do |format|
+      if all_success 
+        format.json { render json: @songs, status: :created }
+      else
+        format.json { render json: @creations.map { |c| c[:msg] }, status: :unprocessable_entity }
+      end
+    end
+
+
+  end
+
   # PATCH/PUT /songs/1
   # PATCH/PUT /songs/1.json
   def update
@@ -69,6 +97,10 @@ class SongsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def song_params
-      params.require(:song).permit(:title, :artist, :imageUrl, :mp3hash, :artistTitleHash)
+      params.require(:song).permit(permitted_keys)
+    end
+
+    def permitted_keys 
+      [:title, :artist, :imageUrl, :mp3hash, :artistTitleHash]
     end
 end

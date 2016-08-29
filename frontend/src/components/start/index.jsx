@@ -36,7 +36,7 @@ const Start = React.createClass({
       return (
         <div key={song.id} className={styles.song}>
           {song.imageUrl != null
-            ? <img src={song.imageUrl} className={styles.cover} />
+            ? <img src={`/images/${song.mp3hash}.png`} className={styles.cover} />
             : <img src="/default_cover.png" className={styles.cover} />}
           <div className={styles.info}>
             <div className={styles.title}>{song.title}</div>

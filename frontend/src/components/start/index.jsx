@@ -22,12 +22,10 @@ const Start = React.createClass({
       ReactDOM.findDOMNode(this.refs.searchInput).focus();
       this.debouncedPerformSearch = _.debounce(this.performSearch, 300);
         fetchJson('/api/songs.json').then(songs => {
-          var sortedSongs = songs.map(song => {
-            song.artist = song.artist == null ? "" : song.artist;
-            song.title = song.title == null ? "" : song.title;
-            return song;
-          }).sort(function(a, b) {
-            var artistDiff = a.artist.toLowerCase().localeCompare(b.artist.toLowerCase());
+          const sortedSongs = songs
+          .filter(s => s.title && s.title.length > 0 && s.artist && s.artist.length > 0)
+          .sort((a, b) => {
+            const artistDiff = a.artist.toLowerCase().localeCompare(b.artist.toLowerCase());
             return artistDiff == 0
               ? a.title.toLowerCase().localeCompare(b.title.toLowerCase())
               : artistDiff;

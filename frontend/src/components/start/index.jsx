@@ -17,22 +17,22 @@ const Start = React.createClass({
       };
     },
 
-    componentDidMount() {
+    componentWillMount() {
       this.debouncedPerformSearch = _.debounce(this.performSearch, 300);
-        fetchJson('/api/songs.json').then(songs => {
-          const sortedSongs = songs
-          .filter(s => s.title && s.title.length > 0 && s.artist && s.artist.length > 0)
-          .sort((a, b) => {
-            const artistDiff = a.artist.toLowerCase().localeCompare(b.artist.toLowerCase());
-            return artistDiff == 0
-              ? a.title.toLowerCase().localeCompare(b.title.toLowerCase())
-              : artistDiff;
-          });
-          this.setState({
-            songs: sortedSongs,
-            filteredSongs: sortedSongs
-          })
+      fetchJson('/api/songs.json').then(songs => {
+        const sortedSongs = songs
+        .filter(s => s.title && s.title.length > 0 && s.artist && s.artist.length > 0)
+        .sort((a, b) => {
+          const artistDiff = a.artist.toLowerCase().localeCompare(b.artist.toLowerCase());
+          return artistDiff == 0
+            ? a.title.toLowerCase().localeCompare(b.title.toLowerCase())
+            : artistDiff;
         });
+        this.setState({
+          songs: sortedSongs,
+          filteredSongs: sortedSongs
+        })
+      });
     },
 
     renderSong(song) {

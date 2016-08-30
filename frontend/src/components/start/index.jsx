@@ -3,7 +3,7 @@
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import Infinite from 'react-infinite';
-import fuzzy from 'fuzzy';
+import Fuse from 'fuse.js';
 import _ from 'lodash';
 import {fetchJson} from '../../services/backend';
 
@@ -60,15 +60,27 @@ const Start = React.createClass({
 
     performSearch() {
       const { searchString, songs } = this.state;
+
+      const options = {
+          shouldSort: true,
+          threshold: 0.4,
+          maxPatternLength: 32,
+          keys: [
+                "title",
+                "artist"
+            ]
+      };
+
+
       if (searchString.length <= 1) {
-        this.setState({ filteredSongs: songs })
+        this.setState({ filteredSongs: songs });
         return;
       }
-      const searchOptions = { extract: e => `${e.artist} ${e.title}` };
-      const searchResults = fuzzy.filter(searchString, songs, searchOptions);
+      const fuse = new Fuse(songs, options);
+      const result = fuse.search(searchString);
 
       this.setState({
-        filteredSongs: searchResults.map(r => r.original)
+        filteredSongs: result
       })
     },
 

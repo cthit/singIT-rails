@@ -1,7 +1,6 @@
 //@flow
 
 import React, {PropTypes} from 'react';
-import ReactDOM from 'react-dom';
 import Infinite from 'react-infinite';
 import Fuse from 'fuse.js';
 import _ from 'lodash';
@@ -19,7 +18,6 @@ const Start = React.createClass({
     },
 
     componentDidMount() {
-      ReactDOM.findDOMNode(this.refs.searchInput).focus();
       this.debouncedPerformSearch = _.debounce(this.performSearch, 300);
         fetchJson('/api/songs.json').then(songs => {
           const sortedSongs = songs
@@ -89,6 +87,7 @@ const Start = React.createClass({
             <div className={styles.container}>
               <h1>singIT<span className={styles.version}>beta</span></h1>
               <input type="text"
+                     autoFocus={true}
                      className={styles.searchBox}
                      ref="searchInput"
                      onChange={this.handleSearchInput}

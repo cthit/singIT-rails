@@ -12,7 +12,11 @@ body {
     font-family: 'Open Sans', serif;
     color: white;
     min-height: 100%;
-    background: #063b42;
+    background-color: #0c2738;
+    background-image: url('/background.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100%;
 }
 
 html { box-sizing: border-box;}

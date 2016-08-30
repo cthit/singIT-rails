@@ -2,6 +2,7 @@
 
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
+import Infinite from 'react-infinite';
 import fuzzy from 'fuzzy';
 import _ from 'lodash';
 import {fetchJson} from '../../services/backend';
@@ -78,7 +79,9 @@ const Start = React.createClass({
                      value={searchString}
                      placeholder="Search" />
               <div className={styles.hits}>Hits: {filteredSongs.length}</div>
-              {filteredSongs.map(s => this.renderSong(s))}
+              <Infinite useWindowAsScrollContainer elementHeight={50}>
+                {filteredSongs.map(s => this.renderSong(s))}
+              </Infinite>
             </div>
         )
     }

@@ -2,6 +2,7 @@
 
 import React, {PropTypes} from 'react';
 import Infinite from 'react-infinite';
+import { StickyContainer, Sticky } from 'react-sticky';
 import Fuse from 'fuse.js';
 import _ from 'lodash';
 import {fetchJson} from '../../services/backend';
@@ -84,20 +85,22 @@ const Start = React.createClass({
         const { filteredSongs, searchString } = this.state;
 
         return (
-            <div className={styles.container}>
+            <StickyContainer className={styles.container}>
               <h1>singIT<span className={styles.version}>beta</span></h1>
-              <input type="text"
-                     autoFocus={true}
-                     className={styles.searchBox}
-                     ref="searchInput"
-                     onChange={this.handleSearchInput}
-                     value={searchString}
-                     placeholder="Search" />
+              <Sticky>
+                <input type="text"
+                       autoFocus={true}
+                       className={styles.searchBox}
+                       ref="searchInput"
+                       onChange={this.handleSearchInput}
+                       value={searchString}
+                       placeholder="Search" />
+              </Sticky>
               <div className={styles.hits}>Hits: {filteredSongs.length}</div>
               <Infinite useWindowAsScrollContainer elementHeight={50}>
                 {filteredSongs.map(s => this.renderSong(s))}
               </Infinite>
-            </div>
+            </StickyContainer>
         )
     }
 });

@@ -1,6 +1,6 @@
 class SongsController < ApplicationController
   before_action :set_song, only: [:show, :edit, :update, :destroy]
-  before_action :restrict_access, only: [:batch_create, :create]
+  before_action :restrict_access, only: [:batch_create, :create, :update, :destroy]
 
   # GET /songs
   # GET /songs.json

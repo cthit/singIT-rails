@@ -13,10 +13,6 @@ body {
     color: white;
     min-height: 100%;
     background-color: #0c2738;
-    background-image: url('/background.jpg');
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: 100%;
 }
 
 html { box-sizing: border-box;}
@@ -24,11 +20,9 @@ html { box-sizing: border-box;}
 
 .main {
     height: 100%;
-    padding: 0 1em
 }
 
 .rootContainer {
-    padding-bottom: 4em;
     display: flex;
     flex-direction: column;
     justify-content: center;

@@ -1,5 +1,8 @@
 .container {
   width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 h1 {
@@ -10,6 +13,45 @@ h1 {
   .version {
     font-size: 12pt;
   }
+}
+
+.sticky {
+  padding: 1em 1em 0.5em;
+}
+
+.searchAndSort {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  i {
+    background: #427493;
+    padding: 0.5em;
+    margin-left: 1em;
+    border-radius: 0.3em;
+    cursor: pointer;
+  }
+
+  i:hover {
+    background: #5b98bd;
+  }
+}
+
+.searchBox {
+  border: none;
+  border-radius: 0.3em;
+  padding: 0.7em 1em;
+  width: 100%;
+  color: #0c2738;
+}
+
+.hits {
+  font-size: smaller;
+}
+
+.songList {
+  padding: 0 1em;
+  overflow: auto;
 }
 
 .song {
@@ -26,6 +68,7 @@ img.cover {
 .info {
   display: flex;
   flex-direction: column;
+  flex: 1;
 }
 
 .title {
@@ -34,18 +77,10 @@ img.cover {
 
 .artist {
   font-size: smaller;
-  color: #9ee;
+  color: #70b6e0;
 }
 
-.searchBox {
-  border: none;
-  border-radius: 0.3em;
-  padding: 0.7em 1em;
-  width: 100%;
-  color: #333;
-}
-
-.hits {
+.date {
   font-size: smaller;
-  margin-bottom: 1em;
+  color: #427493;
 }

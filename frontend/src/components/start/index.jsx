@@ -131,7 +131,10 @@ const Start = React.createClass({
                </div>
               <div className={styles.hits}>Hits: {filteredSongs.length}</div>
             </div>
-            <Infinite useWindowAsScrollContainer elementHeight={50} className={styles.songList}>
+            <Infinite useWindowAsScrollContainer
+                      elementHeight={50}
+                      preloadAdditionalHeight={window.innerHeight*2}
+                      className={styles.songList}>
               {filteredSongs.map(s => this.renderSong(s))}
             </Infinite>
           </div>

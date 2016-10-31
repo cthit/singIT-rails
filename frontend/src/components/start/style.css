@@ -52,6 +52,7 @@ h1 {
 .songList {
   padding: 0 1em;
   overflow: auto;
+  flex: 1;
 }
 
 .song {

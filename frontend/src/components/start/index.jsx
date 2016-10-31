@@ -20,11 +20,20 @@ const Start = React.createClass({
     },
 
     componentWillMount() {
-      this.debouncedPerformSearch = _.debounce(this.performSearch, 300);
+      this.debouncedPerformSearch = _.debounce(this.performSearch, 100);
       fetchJson('/api/songs.json').then(songs => {
         const sortedSongs = songs
         .filter(s => s.title && s.title.length > 0 && s.artist && s.artist.length > 0)
         .sort(this.artistSort);
+        const options = {
+            shouldSort: true,
+            maxPatternLength: 32,
+            keys: [
+                  "title",
+                  "artist"
+              ]
+        };
+        this.fuse = new Fuse(sortedSongs, options);
         this.setState({
           songs: sortedSongs,
           filteredSongs: sortedSongs,
@@ -63,22 +72,11 @@ const Start = React.createClass({
     performSearch() {
       const { searchString, songs } = this.state;
 
-      const options = {
-          shouldSort: true,
-          threshold: 0.4,
-          maxPatternLength: 32,
-          keys: [
-                "title",
-                "artist"
-            ]
-      };
-
       if (searchString.length <= 1) {
         this.setState({ filteredSongs: songs });
         return;
       }
-      const fuse = new Fuse(songs, options);
-      const result = fuse.search(searchString);
+      const result = this.fuse.search(searchString);
 
       this.setState({
         filteredSongs: result

@@ -1,11 +1,21 @@
 class SongsController < ApplicationController
   before_action :set_song, only: [:show, :edit, :update, :destroy]
-  before_action :restrict_access, only: [:batch_create, :create]
+  before_action :restrict_access, only: [:batch_create, :create, :update, :destroy]
 
   # GET /songs
   # GET /songs.json
   def index
     @songs = Song.all
+
+    respond_to do |format|
+      format.html
+      format.json do
+        @json = Rails.cache.fetch @songs do
+          @songs.to_json
+        end
+        render json: @json
+      end
+    end
   end
 
   # GET /songs/1
@@ -45,18 +55,18 @@ class SongsController < ApplicationController
 
     @songs = @songs_params.map {|s| Song.new s}
 
-    @creations = @songs.map do |s|  
+    @creations = @songs.map do |s|
       if s.save
         {success: true, msg: nil}
-      else 
+      else
         {success: false, msg: s.errors}
-      end 
+      end
     end
 
     all_success = @creations.all? {|c| c[:success]}
 
     respond_to do |format|
-      if all_success 
+      if all_success
         format.json { render json: @songs, status: :created }
       else
         format.json { render json: @creations.map { |c| c[:msg] }, status: :unprocessable_entity }
@@ -101,7 +111,7 @@ class SongsController < ApplicationController
       params.require(:song).permit(permitted_keys)
     end
 
-    def permitted_keys 
+    def permitted_keys
       [:title, :artist, :imageUrl, :mp3hash, :artistTitleHash]
     end
 

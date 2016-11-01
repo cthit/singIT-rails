@@ -104,7 +104,7 @@ class SongsController < ApplicationController
     end
 
     def permitted_keys
-      [:title, :artist, :imageUrl, :mp3hash, :artistTitleHash]
+      [:title, :artist, :cover, :song_hash, :genre]
     end
 
     def restrict_access

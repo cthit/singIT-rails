@@ -54,12 +54,12 @@ class SongsController < ApplicationController
     end
 
     @songs = @songs_params.map do |s|
-      song = Song.first_or_initialize(song_hash: s[:song_hash])
+      song = Song.where(song_hash: s[:song_hash]).first_or_initialize
       song.update_attributes(s.except(:song_hash))
       song
     end
 
-    all_success = @songs.all?(&:save)
+    all_success = @songs.all?(&:persisted?)
 
     respond_to do |format|
       if all_success

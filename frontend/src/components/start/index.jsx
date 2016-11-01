@@ -1,6 +1,7 @@
 //@flow
 
 import React, {PropTypes} from 'react';
+import ReactDOM from 'react-dom';
 import Infinite from 'react-infinite';
 import Fuse from 'fuse.js';
 import _ from 'lodash';
@@ -43,6 +44,8 @@ const Start = React.createClass({
     },
 
     handleSearchInput(event) {
+      ReactDOM.findDOMNode(this.songlist).scrollTop = 0
+
       this.setState({
         searchString: event.target.value
       }, this.debouncedPerformSearch)
@@ -109,6 +112,7 @@ const Start = React.createClass({
               <div className={styles.hits}>Hits: {filteredSongs.length}</div>
             </div>
             <Infinite containerHeight={window.innerHeight}
+                      ref={(songlist) => this.songlist = songlist}
                       elementHeight={48}
                       preloadAdditionalHeight={window.innerHeight*2}
                       className={styles.songList}>

@@ -128,7 +128,8 @@ const Start = React.createClass({
                  {this.renderSortButton()}
                </div>
               <div className={styles.hits}>Hits: {filteredSongs.length}</div>
-            <Infinite useWindowAsScrollContainer
+            </div>
+            <Infinite containerHeight={window.innerHeight}
                       elementHeight={48}
                       preloadAdditionalHeight={window.innerHeight*2}
                       className={styles.songList}>

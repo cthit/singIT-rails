@@ -93,10 +93,13 @@ const Start = React.createClass({
                      value={searchString}
                      placeholder="Search" />
               <div className={styles.hits}>Hits: {filteredSongs.length}</div>
-              <Infinite useWindowAsScrollContainer elementHeight={50}>
-                {filteredSongs.map(s => this.renderSong(s))}
-              </Infinite>
-            </div>
+            <Infinite useWindowAsScrollContainer
+                      elementHeight={48}
+                      preloadAdditionalHeight={window.innerHeight*2}
+                      className={styles.songList}>
+              {filteredSongs.map(s => this.renderSong(s))}
+            </Infinite>
+          </div>
         )
     }
 });

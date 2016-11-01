@@ -1,2 +1,2 @@
-json.extract! song, :id, :title, :artist, :imageUrl, :mp3hash, :artistTitleHash, :created_at, :updated_at
+json.extract! song, :id, :title, :artist, :cover, :song_hash, :genres, :created_at, :updated_at
 json.url song_url(song, format: :json)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160829190302) do
+ActiveRecord::Schema.define(version: 20161101085742) do
 
   create_table "api_keys", force: :cascade do |t|
     t.string   "access_token"
@@ -22,11 +22,11 @@ ActiveRecord::Schema.define(version: 20160829190302) do
   create_table "songs", force: :cascade do |t|
     t.string   "title"
     t.string   "artist"
-    t.string   "imageUrl"
-    t.string   "mp3hash"
-    t.string   "artistTitleHash"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.string   "cover"
+    t.string   "song_hash"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string   "genres"
   end
 
 end

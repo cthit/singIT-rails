@@ -52,24 +52,15 @@ class SongsController < ApplicationController
     @songs_params = params[:songs].map do |song|
       song.permit(permitted_keys)
     end
+    @songs = Song.create @songs_params
 
-    @songs = @songs_params.map {|s| Song.new s}
-
-    @creations = @songs.map do |s|
-      if s.save
-        {success: true, msg: nil}
-      else
-        {success: false, msg: s.errors}
-      end
-    end
-
-    all_success = @creations.all? {|c| c[:success]}
+    all_success = @songs.all?(&:persisted?)
 
     respond_to do |format|
       if all_success
         format.json { render json: @songs, status: :created }
       else
-        format.json { render json: @creations.map { |c| c[:msg] }, status: :unprocessable_entity }
+        format.json { render json: @songs.map(&:errors), status: :unprocessable_entity }
       end
     end
 
@@ -112,7 +103,7 @@ class SongsController < ApplicationController
     end
 
     def permitted_keys
-      [:title, :artist, :imageUrl, :mp3hash, :artistTitleHash]
+      [:title, :artist, :cover, :song_hash, :genre]
     end
 
     def restrict_access

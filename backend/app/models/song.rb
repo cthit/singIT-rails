@@ -1,3 +1,8 @@
 class Song < ApplicationRecord
-  validates :mp3hash, uniqueness: true
+  validates :song_hash, uniqueness: true
+  serialize :genres, Array
+
+  def genre=(string)
+    self.genres = string.downcase.split
+  end
 end

@@ -12,7 +12,7 @@ import sys
 image_dir = Path('.') / 'images'
 
 def main(args):
-    d = {}
+    l = []
     root = Path(args.directory)
     if not root.exists():
         print('Specify a readable directory kthx')
@@ -36,18 +36,19 @@ def main(args):
                         make_small_image(cover_file, song_hash)
                     else:
                         del song['cover']
-                d[song_hash] = song
+                l.append(song)
             except:
                 print(str(txt)+" is broken!")
                 print(get_encoding(txt))
                 pass
 
-    print('Outputting JSON for', len(d), 'songs')
+    print('Outputting JSON for', len(l), 'songs')
     with open('output.txt', 'w') as outfile:
-        json.dump(d, outfile)
+        json.dump(l, outfile)
 
 def get_metadata(filename):
     song = {}
+    song['song_hash'] = get_hash(filename)
     f_encoding = get_encoding(filename)['encoding']
     with filename.open(encoding=f_encoding) as f:
         for line in f:

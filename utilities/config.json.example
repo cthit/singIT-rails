@@ -1,0 +1,4 @@
+{
+    "api" : "https://url.to/backend/api/songs/batch_create.json",
+    "api_key" : "magic_numbers"
+}

@@ -4,8 +4,8 @@ import React, {PropTypes} from 'react';
 import Infinite from 'react-infinite';
 import Fuse from 'fuse.js';
 import _ from 'lodash';
-import moment from 'moment';
 import {fetchJson} from '../../services/backend';
+import SongItem from '../song-item'
 
 import styles from './style.css'
 
@@ -40,27 +40,6 @@ const Start = React.createClass({
           sortingMethod: this.artistSort
         })
       });
-    },
-
-    renderDate(date) {
-      if ((new Date(date)).getYear() === (new Date()).getYear())
-        return <div className={styles.date}>{moment(date).format("D/M")}</div>
-      else
-        return <div className={styles.date}>{moment(date).format("YYYY")}</div>
-    },
-
-    renderSong(song) {
-      const imagePath = song.cover === null ? "/default_cover.png" : `/images/${song.song_hash}.png`
-      return (
-        <div key={song.song_hash} className={styles.song}>
-          <img src={imagePath} className={styles.cover} />
-          <div className={styles.info}>
-            <div className={styles.title}>{song.title}</div>
-            <div className={styles.artist}>{song.artist}</div>
-          </div>
-          {this.renderDate(song.created_at)}
-        </div>
-      )
     },
 
     handleSearchInput(event) {
@@ -133,7 +112,9 @@ const Start = React.createClass({
                       elementHeight={48}
                       preloadAdditionalHeight={window.innerHeight*2}
                       className={styles.songList}>
-              {filteredSongs.map(s => this.renderSong(s))}
+              {filteredSongs.map(song => (
+                <SongItem key={song.song_hash} song={song} />
+              ))}
             </Infinite>
           </div>
         )

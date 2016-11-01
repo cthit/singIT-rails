@@ -52,7 +52,11 @@ class SongsController < ApplicationController
     @songs_params = params[:songs].map do |song|
       song.permit(permitted_keys)
     end
-    @songs = Song.create @songs_params
+    @songs = @songs_params.map do |s|
+      song = Song.where(song_hash: s[:song_hash]).first_or_initialize
+      song.update_attributes(s.except(:song_hash))
+      song
+    end
 
     all_success = @songs.all?(&:persisted?)
 

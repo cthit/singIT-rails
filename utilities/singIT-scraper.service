@@ -1,0 +1,12 @@
+[Unit]
+Description=singIT-scraper
+
+[Service]
+User=digit
+Environment=WATCH_DIR=/home/pubrunda/.ultrastardx/songs
+Environment=SCRIPT=/opt/digit/singit/utilities/singIT-scraper.py
+ExecStart=/opt/digit/singit/utilities/singIT-watcher.sh
+WorkingDirectory=/home/digit/singIT
+
+[Install]
+WantedBy=multi-user.target

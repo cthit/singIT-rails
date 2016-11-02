@@ -16,7 +16,10 @@ const timeSort = (a, b) => {
 }
 
 const artistSort = (a, b) => {
-  return a.artist.toLowerCase().localeCompare(b.artist.toLowerCase());
+  const artistDiff = a.artist.toLowerCase().localeCompare(b.artist.toLowerCase());
+  return artistDiff == 0
+    ? a.title.toLowerCase().localeCompare(b.title.toLowerCase())		
+    : artistDiff;
 }
 
 const Start = React.createClass({

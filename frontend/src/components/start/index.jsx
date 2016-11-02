@@ -1,13 +1,23 @@
 //@flow
 
 import React, {PropTypes} from 'react';
+import ReactDOM from 'react-dom';
 import Infinite from 'react-infinite';
 import Fuse from 'fuse.js';
 import _ from 'lodash';
-import moment from 'moment';
 import {fetchJson} from '../../services/backend';
+import SongItem from '../song-item'
 
 import styles from './style.css'
+
+
+const timeSort = (a, b) => {
+  return new Date(b.created_at) - new Date(a.created_at);
+}
+
+const artistSort = (a, b) => {
+  return a.artist.toLowerCase().localeCompare(b.artist.toLowerCase());
+}
 
 const Start = React.createClass({
     getInitialState() {
@@ -15,7 +25,7 @@ const Start = React.createClass({
         searchString: '',
         songs: [],
         filteredSongs: [],
-        sortingMethod: this.artistSort
+        sortingMethod: artistSort
       };
     },
 
@@ -23,8 +33,8 @@ const Start = React.createClass({
       this.debouncedPerformSearch = _.debounce(this.performSearch, 100);
       fetchJson('/api/songs.json').then(songs => {
         const sortedSongs = songs
-        .filter(s => s.title && s.title.length > 0 && s.artist && s.artist.length > 0)
-        .sort(this.artistSort);
+          .filter(s => s.title && s.title.length > 0 && s.artist && s.artist.length > 0)
+          .sort(artistSort);
         const options = {
             shouldSort: true,
             maxPatternLength: 32,
@@ -37,33 +47,14 @@ const Start = React.createClass({
         this.setState({
           songs: sortedSongs,
           filteredSongs: sortedSongs,
-          sortingMethod: this.artistSort
+          sortingMethod: artistSort
         })
       });
     },
 
-    renderDate(date) {
-      if ((new Date(date)).getYear() === (new Date()).getYear())
-        return <div className={styles.date}>{moment(date).format("D/M")}</div>
-      else
-        return <div className={styles.date}>{moment(date).format("YYYY")}</div>
-    },
-
-    renderSong(song) {
-      const imagePath = song.cover === null ? "/default_cover.png" : `/images/${song.song_hash}.png`
-      return (
-        <div key={song.song_hash} className={styles.song}>
-          <img src={imagePath} className={styles.cover} />
-          <div className={styles.info}>
-            <div className={styles.title}>{song.title}</div>
-            <div className={styles.artist}>{song.artist}</div>
-          </div>
-          {this.renderDate(song.created_at)}
-        </div>
-      )
-    },
-
     handleSearchInput(event) {
+      ReactDOM.findDOMNode(this.songlist).scrollTop = 0
+
       this.setState({
         searchString: event.target.value
       }, this.debouncedPerformSearch)
@@ -83,17 +74,6 @@ const Start = React.createClass({
       })
     },
 
-    artistSort(a, b) {
-      const artistDiff = a.artist.toLowerCase().localeCompare(b.artist.toLowerCase());
-      return artistDiff == 0
-        ? a.title.toLowerCase().localeCompare(b.title.toLowerCase())
-        : artistDiff;
-    },
-
-    timeSort(a, b) {
-      return a.created_at == b.created_at ? 0 : a.created_at < b.created_at ? 1 : -1;
-    },
-
     sortSongs(sortingMethod) {
       const songs = this.state.songs.sort(sortingMethod);
       const filteredSongs = this.state.filteredSongs.sort(sortingMethod);
@@ -102,12 +82,12 @@ const Start = React.createClass({
 
     renderSortButton() {
       switch (this.state.sortingMethod) {
-        case this.artistSort:
-          return <i className="fa fa-clock-o" onClick={() => this.sortSongs(this.timeSort)}></i>
-        case this.timeSort:
-          return <i className="fa fa-sort-alpha-asc" onClick={() => this.sortSongs(this.artistSort)}></i>
+        case artistSort:
+          return <i className="fa fa-clock-o" onClick={() => this.sortSongs(timeSort)}></i>
+        case timeSort:
+          return <i className="fa fa-sort-alpha-asc" onClick={() => this.sortSongs(artistSort)}></i>
         default:
-          return <i className="fa fa-clock-o" onClick={() => this.sortSongs(this.timeSort)}></i>
+          return <i className="fa fa-clock-o" onClick={() => this.sortSongs(timeSort)}></i>
         }
     },
 
@@ -130,10 +110,13 @@ const Start = React.createClass({
               <div className={styles.hits}>Hits: {filteredSongs.length}</div>
             </div>
             <Infinite containerHeight={window.innerHeight}
+                      ref={(songlist) => this.songlist = songlist}
                       elementHeight={48}
                       preloadAdditionalHeight={window.innerHeight*2}
                       className={styles.songList}>
-              {filteredSongs.map(s => this.renderSong(s))}
+              {filteredSongs.map(song => (
+                <SongItem key={song.song_hash} song={song} />
+              ))}
             </Infinite>
           </div>
         )

@@ -1,0 +1,30 @@
+.song {
+  display: flex;
+  flex-direction: row;
+}
+
+img.cover {
+  height: 3em;
+  width: 3em;
+  margin-right: 1em;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.title {
+
+}
+
+.artist {
+  font-size: smaller;
+  color: #adddff;
+}
+
+.date {
+  font-size: smaller;
+  color: #427493;
+}

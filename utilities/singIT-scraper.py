@@ -68,6 +68,8 @@ def get_metadata(filename):
   song = {}
   song['song_hash'] = get_hash(filename)
   f_encoding = get_encoding(filename)['encoding']
+  if f_encoding == 'ISO-8859-2':
+    f_encoding = 'ISO-8859-1'
   with filename.open(encoding=f_encoding) as f:
     for line in f:
       if line.startswith('#'):

@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 
 from pathlib import Path
-from PIL import Image
+from PIL import Image, ImageFile
 import requests
 import time
-import PIL
 import chardet
 import hashlib
 import json
 import argparse
 import sys
+
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 config = {}
 api_key = ''
@@ -95,13 +96,11 @@ def make_small_image(filename, song_hash):
   if not destination_file.exists():
     basewidth = 200
     try:
-      img = Image.open(filename)
-      wpercent = (basewidth/float(img.size[0]))
-      hsize = int((float(img.size[1]) * float(wpercent)))
-      sml_img = img.resize((basewidth, hsize), PIL.Image.ANTIALIAS)
-      img.close()
-      sml_img.save(str(destination_file), 'PNG')
-      sml_img.close()
+      with Image.open(filename) as img:
+        wpercent = (basewidth/float(img.size[0]))
+        hsize = int((float(img.size[1]) * float(wpercent)))
+        with img.resize((basewidth, hsize), Image.ANTIALIAS) as sml_img:
+          sml_img.save(str(destination_file), 'PNG')
     except IOError:
       pass
 
@@ -140,11 +139,11 @@ if __name__ == "__main__":
 
   parser = argparse.ArgumentParser(description='Parse Ultrastar DX song files into JSON.')
   group = parser.add_mutually_exclusive_group(required=True)
-  group.add_argument('-d','--directory', 
-    help='directory to use', 
+  group.add_argument('-d','--directory',
+    help='directory to use',
     action='store')
-  group.add_argument('-s','--single', 
-    help='txt file to use', 
+  group.add_argument('-s','--single',
+    help='txt file to use',
     action='store')
   parser.add_argument('-f','--file',
     help='parse to file instead of upload',

@@ -1,16 +1,15 @@
 import React from 'react';
 import styles from './rootStyle.css';
+import { hot } from 'react-hot-loader'
+import Start from './components/start';
 
-const Root = React.createClass({
-    render() {
-        return (
-            <div className={styles.main}>
-                <div className={styles.rootContainer}>
-                    { this.props.children }
-                    </div>
-            </div>
-    );
-    }
-});
 
-export default Root
+const App = () => (
+    <div className={styles.main}>
+        <div className={styles.rootContainer}>
+            <Start/>
+        </div>
+    </div>
+);
+
+export default hot(module)(App)

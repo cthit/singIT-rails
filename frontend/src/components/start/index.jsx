@@ -2,86 +2,70 @@
 
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
-import Infinite from 'react-infinite';
-import Fuse from 'fuse.js';
+import { List } from 'react-virtualized';
+import FuzzySearch from 'fuzzy-search'
 import _ from 'lodash';
-import {fetchJson} from '../../services/backend';
+import {fetchJson, fetchSongs} from '../../services/backend';
 import SongItem from '../song-item'
 
 import styles from './style.css'
 
 
-const timeSort = (a, b) => {
-  return new Date(b.created_at) - new Date(a.created_at);
-}
+const timeSort = [['created_at'], ['desc']];
+const artistSort = [['artist', 'title'], ['asc', 'asc']];
 
-const artistSort = (a, b) => {
-  const artistDiff = a.artist.toLowerCase().localeCompare(b.artist.toLowerCase());
-  return artistDiff == 0
-    ? a.title.toLowerCase().localeCompare(b.title.toLowerCase())		
-    : artistDiff;
-}
-
-const Start = React.createClass({
-    getInitialState() {
-      return {
+class Start extends React.Component {
+    state = {
         searchString: '',
         songs: [],
         filteredSongs: [],
         sortingMethod: artistSort
-      };
-    },
+    };
 
     componentWillMount() {
       this.debouncedPerformSearch = _.debounce(this.performSearch, 100);
-      fetchJson('/api/songs.json').then(songs => {
-        const sortedSongs = songs
-          .filter(s => s.title && s.title.length > 0 && s.artist && s.artist.length > 0)
-          .sort(artistSort);
+      fetchSongs().then(songs => {
+        const sortedSongs = _.orderBy(songs
+          .filter(s => s.title && s.title.length > 0 && s.artist && s.artist.length > 0), ...artistSort);
         const options = {
-            shouldSort: true,
-            maxPatternLength: 32,
-            keys: [
-                  "title",
-                  "artist"
-              ]
+            sort: true
         };
-        this.fuse = new Fuse(sortedSongs, options);
+        this.searcher = new FuzzySearch(sortedSongs, ["title", "artist"], options);
         this.setState({
           songs: sortedSongs,
           filteredSongs: sortedSongs,
           sortingMethod: artistSort
         })
       });
-    },
+    }
 
-    handleSearchInput(event) {
+    handleSearchInput = (event) => {
       ReactDOM.findDOMNode(this.songlist).scrollTop = 0
 
       this.setState({
         searchString: event.target.value
       }, this.debouncedPerformSearch)
-    },
+    }
 
-    performSearch() {
+    performSearch = () => {
       const { searchString, songs } = this.state;
 
       if (searchString.length <= 1) {
         this.setState({ filteredSongs: songs });
         return;
       }
-      const result = this.fuse.search(searchString);
+      const result = this.searcher.search(searchString);
 
       this.setState({
         filteredSongs: result
       })
-    },
+    }
 
-    sortSongs(sortingMethod) {
-      const songs = this.state.songs.sort(sortingMethod);
-      const filteredSongs = this.state.filteredSongs.sort(sortingMethod);
-      this.setState({songs, filteredSongs, sortingMethod})
-    },
+    sortSongs = (sortingMethod) => {
+      const songs = _.orderBy(this.state.songs, ...sortingMethod);
+      const filteredSongs = _.orderBy(this.state.filteredSongs, ...sortingMethod);
+      this.setState({songs, filteredSongs, sortingMethod}, () => this.songlist.forceUpdateGrid())
+    }
 
     renderSortButton() {
       switch (this.state.sortingMethod) {
@@ -92,7 +76,17 @@ const Start = React.createClass({
         default:
           return <i className="fa fa-clock-o" onClick={() => this.sortSongs(timeSort)}></i>
         }
-    },
+    }
+
+    renderRow = ({
+      index,       // Index of row within collection
+      style        // Style object to be applied to row (to position it)
+    }) => {
+      const { filteredSongs } = this.state;
+      const song = filteredSongs[index];
+
+      return <SongItem key={song.song_hash} style={style} song={song} />
+    }
 
     render() {
         const { filteredSongs, searchString } = this.state;
@@ -101,7 +95,7 @@ const Start = React.createClass({
           <div className={styles.container}>
             <div className={styles.sticky}>
               <div className={styles.searchAndSort}>
-                <input type="text"
+                <input type="search"
                        autoFocus={true}
                        className={styles.searchBox}
                        ref="searchInput"
@@ -112,18 +106,18 @@ const Start = React.createClass({
                </div>
               <div className={styles.hits}>Hits: {filteredSongs.length}</div>
             </div>
-            <Infinite containerHeight={window.innerHeight}
-                      ref={(songlist) => this.songlist = songlist}
-                      elementHeight={48}
-                      preloadAdditionalHeight={window.innerHeight*2}
-                      className={styles.songList}>
-              {filteredSongs.map(song => (
-                <SongItem key={song.song_hash} song={song} />
-              ))}
-            </Infinite>
+            <List height={window.innerHeight - 74}
+                  ref={(songlist) => this.songlist = songlist}
+                  rowHeight={48}
+                  width={window.innerWidth}
+                  rowCount={filteredSongs.length}
+                  preloadAdditionalHeight={window.innerHeight*2}
+                  rowRenderer={this.renderRow}
+                  className={styles.songList}
+            />
           </div>
         )
     }
-});
+}
 
 export default Start

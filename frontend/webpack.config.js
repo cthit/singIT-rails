@@ -25,6 +25,7 @@ module.exports = {
 	devServer: {
 		historyApiFallback: true,
 		contentBase: './build',
+		disableHostCheck: true,
 		hot: true,
 		stats: {
 				colors: true,

@@ -1,4 +1,4 @@
-const fetchJson = (url, options = {}) =>
+export const fetchJson = (url, options = {}) =>
   fetch(url, options)
     .then(resp => {
       if (resp.ok) {
@@ -9,4 +9,4 @@ const fetchJson = (url, options = {}) =>
     })
     .then(d => d.json());
 
-export {fetchJson};
+export const fetchSongs = () => fetchJson('/api/songs.json');

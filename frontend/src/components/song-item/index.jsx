@@ -14,27 +14,23 @@ const formatDate = (date) => {
   }
 }
 
-const SongItem = React.createClass({
-  renderDate(date) {
-    return (
-      <div className={styles.date}>{formatDate(date)}</div>
-    )
-  },
-  render() {
-    const { song } = this.props
-    const imagePath = song.cover === null ? "/default_cover.png" : `/images/${song.song_hash}.png`
+const renderDate = (date) => (
+    <div className={styles.date}>{formatDate(date)}</div>
+)
 
-    return (
-      <div key={song.song_hash} className={styles.song}>
-        <img src={imagePath} className={styles.cover} />
-        <div className={styles.info}>
-          <div className={styles.title}>{song.title}</div>
-          <div className={styles.artist}>{song.artist}</div>
-        </div>
-        {this.renderDate(song.created_at)}
+const SongItem = ({ song, style = {} }) => {
+  const imagePath = song.cover === null ? null : `/images/${song.song_hash}.png`
+
+  return (
+    <div style={style} key={song.song_hash} className={styles.song}>
+      <div className={styles.cover} style={{ backgroundImage: `${imagePath ? `url(${imagePath}),` : ''} url(/default_cover.png)` }} />
+      <div className={styles.info}>
+        <div className={styles.title}>{song.title}</div>
+        <div className={styles.artist}>{song.artist}</div>
       </div>
-      )
-  }
-})
+      {renderDate(song.created_at)}
+    </div>
+    )
+}
 
 export default SongItem

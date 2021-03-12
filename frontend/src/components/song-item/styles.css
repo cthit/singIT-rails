@@ -3,10 +3,11 @@
   flex-direction: row;
 }
 
-img.cover {
+.cover {
   height: 3em;
   width: 3em;
   margin-right: 1em;
+  background-size: contain;
 }
 
 .info {

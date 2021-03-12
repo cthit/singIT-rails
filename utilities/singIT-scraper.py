@@ -113,6 +113,11 @@ def post_content(songlist, args):
       'Authorization': 'Token token=' + api_key
       }
     r = requests.post(config['api'], data=json.dumps(d), headers=h)
+    for index, song in enumerate(songlist):
+      if jsonlist[index]:
+        print("Song with index {} is empty in r.json()".format(index))
+        print(song)
+
     color = '\033[32m' if r.status_code == requests.codes.created else '\033[91m'
     reset = '\033[0m'  # reset color
     print("[{}] {:2} -> {} -> {}{} {}{}"
